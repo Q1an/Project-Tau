@@ -1,8 +1,7 @@
 import SimpleHTTPServer
 import SocketServer
-
 port = 8000
-address = "192.168.1.173"
+address = ""
 
 
 
@@ -16,7 +15,8 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         print("======= POST Headers =======")
         print(self.headers)
         print("======= POST Values =======")
-        print(self.rfile.read(int(self.headers.getheader('content-length'))))
+        if self.headers.getheader('content-length'):
+            print(self.rfile.read(int(self.headers.getheader('content-length'))))
         SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 Handler = ServerHandler
