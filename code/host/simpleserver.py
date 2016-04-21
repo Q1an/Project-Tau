@@ -3,8 +3,6 @@ import SocketServer
 port = 8000
 address = ""
 
-
-
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
         print("======= GET Headers =======")
@@ -17,7 +15,10 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         print("======= POST Values =======")
         if self.headers.getheader('content-length'):
             print(self.rfile.read(int(self.headers.getheader('content-length'))))
-        SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write("1150")
+        #SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 Handler = ServerHandler
 

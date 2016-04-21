@@ -1,19 +1,22 @@
 #include <Wire.h>
-#include "Adafruit_BNO055.h"
-#include "imumaths.h"
-  
 #include <Arduino.h>
-
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
-
 #include <ESP8266HTTPClient.h>
+#include <Servo.h>
+#include "Adafruit_BNO055.h"
+#include "imumaths.h"
+
+
 
 #define USE_SERIAL Serial
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
 Adafruit_BNO055 bno = Adafruit_BNO055();
 ESP8266WiFiMulti WiFiMulti;
+Servo s;
+int pos = 0;
+int Servo_PIN = 12; //NodeMCU D6
 
 void displaySensorStatus(void)
 {
@@ -48,7 +51,7 @@ void setup() {
 
     WiFiMulti.addAP("Tau", "314159265358");
 
-    Serial.println("Orientation Sensor Raw Data Test\n");
+    Serial.println("IMU Initialization\n");
     /* Initialise the sensor */
     if(!bno.begin())
     {
@@ -60,6 +63,7 @@ void setup() {
     delay(1000);
     bno.setExtCrystalUse(true);
     displaySensorStatus();
+    s.attach(Servo_PIN);
 }
 
 void loop() {
@@ -151,7 +155,11 @@ void loop() {
             // file found at server
             if(httpCode == HTTP_CODE_OK) {
                 String payload = http.getString();
-                USE_SERIAL.println(payload);
+                int servodata = payload.toInt();
+                int val = map(servodata, 0, 360, 150, 30);     
+                s.write(val);
+                delay(50);
+                USE_SERIAL.println(val);
             }
         } else {
             USE_SERIAL.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
@@ -160,5 +168,5 @@ void loop() {
         http.end();
     }
 
-    delay(100);
+    delay(50);
 }
