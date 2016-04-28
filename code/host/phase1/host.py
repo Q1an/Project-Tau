@@ -14,7 +14,7 @@ port = 8000
 address = ""
 
 ax, ay, az = 0.0,0.0,0.0
-
+s1,s2,s3,s4=90,90,90,90
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
 		print("======= GET Headers =======")
@@ -30,9 +30,10 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		global ax, ay, az
 		ay,az,ax= -d["euler_x"],-d["euler_y"],d["euler_z"]
 		print(ay,az,ax)
+		global s1,s2,s3,s4
 		self.send_response(200)
 		self.end_headers()
-		self.wfile.write(str(d["euler_x"]))
+		self.wfile.write(str(s1+100)+str(s2+100)+str(s3+100)+str(s4+100))
 		#SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 Handler = ServerHandler
@@ -130,7 +131,7 @@ def draw():
 		 
 
 
-def main():
+def graph():
 	video_flags = OPENGL|DOUBLEBUF
 	pygame.init()
 	screen = pygame.display.set_mode((640,480), video_flags)
@@ -149,12 +150,44 @@ def main():
 		frames = frames+1
 
 	print "fps:  %d" % ((frames*1000)/(pygame.time.get_ticks()-ticks))
-	ser.close()
 
+def servogene():
+	global s1,s2,s3,s4
+	while 1:
 
-# t = threading.Thread(target=serv, name='server')
-# t.start()
-# main()
-# t.join()
+		# s2 = 130
+		# time.sleep(1)
+		# s2 = 50
+		# time.sleep(1)
+		# s3 = 130
+		# time.sleep(1)
+		# s3 = 50
+		# time.sleep(1)
+		# s4 = 130
+		# time.sleep(1)
+		# s4 = 50
 
-serv()
+		s1=48
+		s4=45
+		time.sleep(0.8)
+		s1=84
+		s2=120
+		s3=127
+		s4=82
+		time.sleep(0.8)
+		s2=140
+		s3=147
+		time.sleep(0.1)
+		print (s1,s2,s3,s4)
+
+t1 = threading.Thread(target=serv, name='server')
+t1.daemon = True
+t1.start()
+t2 = threading.Thread(target=servogene, name='servogene')
+t2.daemon = True
+t2.start()
+
+graph()
+sys.exit()
+t1.join()
+t2.join()

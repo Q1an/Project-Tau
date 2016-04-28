@@ -24,5 +24,8 @@ def imuparser(data):
 	dic["euler_z"]=twochartoint(data[16:18])/16.0
 	return dic
 
+def servomap(t,a,b,c,d):
+	return (b-a)/(d-c)*(t-c)+a
+
 
 
