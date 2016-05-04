@@ -20,7 +20,7 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		if self.headers.getheader('content-length'):
 			d = parse.imuparser(self.rfile.read(int(self.headers.getheader('content-length'))))
 
-		globalvar.ay,globalvar.az,globalvar.ax= -d["euler_x"],-d["euler_y"],d["euler_z"]
+		globalvar.ay,globalvar.az,globalvar.ax= -d["euler_x"],-d["euler_y"],-d["euler_z"]
 		print(globalvar.ay,globalvar.az,globalvar.ax)
 
 		self.send_response(200)

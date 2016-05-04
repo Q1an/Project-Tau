@@ -91,9 +91,9 @@ def draw():
 def graph():
 	video_flags = OPENGL|DOUBLEBUF
 	pygame.init()
-	screen = pygame.display.set_mode((640,480), video_flags)
+	screen = pygame.display.set_mode((1440,900), video_flags)
 	pygame.display.set_caption("Press Esc to quit, z toggles yaw mode")
-	resize((640,480))
+	resize((1440,900))
 	init()
 	frames = 0
 	ticks = pygame.time.get_ticks()

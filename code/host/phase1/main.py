@@ -1,5 +1,5 @@
 # Three threads: server, opengl, servo control
-from globalvar import *
+import globalvar
 import time, threading
 import host
 import graph
@@ -8,7 +8,10 @@ import sys
 
 def servogene():
 	while 1:
-
+		#s4 right black
+		#s1 left black
+		#s2 left yellow
+		#s3 right black
 		# s2 = 130
 		# time.sleep(1)
 		# s2 = 50
@@ -21,18 +24,31 @@ def servogene():
 		# time.sleep(1)
 		# s4 = 50
 
-		s1=48
-		s4=45
-		time.sleep(0.8)
-		s1=84
-		s2=120
-		s3=127
-		s4=82
-		time.sleep(0.8)
-		s2=140
-		s3=147
+
+		# globalvar.s4=105
+		# globalvar.s3=105
+		# globalvar.s1=74
+		# globalvar.s2=74
+		# time.sleep(0.8)
+		# globalvar.s1=105
+		# globalvar.s2=105
+		# globalvar.s4=74
+		# globalvar.s3=74
+		# time.sleep(0.8)
+		globalvar.s1=48
 		time.sleep(0.1)
-		print (s1,s2,s3,s4)
+		globalvar.s4=44
+		time.sleep(0.2)
+		globalvar.s1=84
+		globalvar.s2=120
+		globalvar.s3=127
+		globalvar.s4=82
+		time.sleep(0.2)
+		globalvar.s2=140
+		globalvar.s3=147
+		time.sleep(0.1)
+		
+		print (globalvar.s1,globalvar.s2,globalvar.s3,globalvar.s4)
 
 if __name__=='__main__':
 	t1 = threading.Thread(target=host.serv, name='server')
