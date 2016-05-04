@@ -16,7 +16,7 @@ For the first two phases of the project, all robots will be connected to a host 
 - decide on project visions;
 
 ####Phase 1  [Completed - Apr 28, 2016]
-
+![walk.gif](https://github.com/Q1an/Project-Tau/raw/master/source/walk.gif)  
 - design the mechanical structure of the robot; assemble prototypes;  
 - setup local web server to receive IMU data sent from each robot; 
 - send moving instructions through Wi-Fi to each robot based on a naive, deterministic algorithm;
