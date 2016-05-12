@@ -5,9 +5,11 @@
 #include <ESP8266HTTPClient.h>
 #include <Servo.h>
 #include "imumaths.h"
+#include "Adafruit_BNO055.h"
 
 #define USE_SERIAL Serial
 
+Adafruit_BNO055 bno = Adafruit_BNO055();
 ESP8266WiFiMulti WiFiMulti;
 
 Servo s1;
@@ -53,7 +55,18 @@ void setup() {
 
   WiFiMulti.addAP("Tau", "314159265358");
 
+  Serial.println("IMU Initialization\n");
+  /* Initialise the sensor */
+  if(!bno.begin())
+  {
+    /* There was a problem detecting the BNO055 ... check your connections */
+    Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+    while(1);
+  }
+
   delay(1000);
+  bno.setExtCrystalUse(true);
+  displaySensorStatus();
   s1.attach(Servo_PIN1);
   s2.attach(Servo_PIN2);
 }
@@ -82,7 +95,9 @@ void loop() {
   unsigned long currentTime = micros();
   if (currentTime - previousTime >= interval)
   {    
-        
+    Serial.println(currentTime - previousTime);
+    previousTime = currentTime;
+    
     if((WiFiMulti.run() == WL_CONNECTED)) {
 
         HTTPClient http;
@@ -103,7 +118,6 @@ void loop() {
         for (int i = 0; i < 6; i++)
           datasent[i + 12] = euler[i];
         
-        uint8_t datasent[18]; memset(datasent, 0, 18);
         int httpCode = http.POST(datasent, sizeof(datasent));
        
         if(httpCode > 0) {
@@ -119,9 +133,8 @@ void loop() {
                 int val2 = servo2-100;      
                 s1.write(val1);
                 s2.write(val2);
-                delay(50);
-                USE_SERIAL.println(val1);
-                USE_SERIAL.println(val2);
+//                USE_SERIAL.println(val1);
+//                USE_SERIAL.println(val2);
             }
         } else {
             USE_SERIAL.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
