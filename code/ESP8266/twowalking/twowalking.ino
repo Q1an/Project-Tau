@@ -86,7 +86,7 @@ void loop() {
     if((WiFiMulti.run() == WL_CONNECTED)) {
 
         HTTPClient http;
-
+        http.setTimeout(50);
         // USE_SERIAL.print("[HTTP] begin...\n");
 
         /* configure server and url */
