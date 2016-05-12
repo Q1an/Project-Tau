@@ -1,5 +1,5 @@
 #Project Tau
-![blueprint](https://github.com/Q1an/Project-Tau/raw/master/source/bp_web.jpg)
+![blueprint](https://github.com/Q1an/Project-Tau/raw/master/source/Phase1_White.001.w.caption.jpg)
 
 ##Project Overview
 This project is intended to build a group of simple robots that learns how to move cooperatively based on the way they are assembled. While each robot has only one leg which moves forward and backward, the system can support much more complicated moving strategies, such as walking, running and rotating.  
@@ -16,26 +16,41 @@ For the first two phases of the project, all robots will be connected to a host 
 - decide on project visions;
 
 ####Phase 1  [Completed - Apr 28, 2016]
-![walk.gif](https://github.com/Q1an/Project-Tau/raw/master/source/walk.gif)  
+**iteration 1**   
+
 - design the mechanical structure of the robot; assemble prototypes;  
-- setup local web server to receive IMU data sent from each robot; 
+- setup local web server to receive IMU data sent from each robot;   
 - send moving instructions through Wi-Fi to each robot based on a naive, deterministic algorithm;
-- assemble a four-robot system; the system is able to move steadily;
+- assemble a four-robot system; the system is able to move steadily;   
+
+**iteration 2**
+
+- use new stable servo
+- standardize model:
+	- easy to assemble
+	- legs are of the same legnth
+	- calibrate servo
+- modify robot design to accommodate requirements of power supply; use flexible cable;
+- check MCU code to solve occasional delays
+- based on IMU to know directions
+- work on the server programin preparation for phase 2; 
+
 
 ####Phase 2  [Ongoing]
 
-- modify robot design to accommodate requirements of power supply;
-- design a simple machine learning algorithm; 
-- design a lightweight database storing information collected in this phase;
-- the system is able to develop satisfying moving stategies based on 4 - 5 different assemble styles;
+- build a long-lasting and safe playground;
+- optimaize the developed moving strategy based on ML algorithm;
+- regulate the data received, establish the learnign model;
+- build a database to store relevant info.
+- try more advanced ML algorithmsto tune the robots;
+
 
 ####Phase 3
 
-- realize simulators on the host; simulators are able to identify its neighbors;
-- update the database;
+- realize simulators on the host;
 - without prior knowledge of how it is assembled, the system is able to develop satisfying optimal stategies through learning; 
 - support more interesting ways of assembling these robots;
-- the system can move on different terrians;
+- the system can move on different terrains;
 
 ####Phase 4
 
