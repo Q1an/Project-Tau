@@ -16,7 +16,7 @@ For the first two phases of the project, all robots will be connected to a host 
 - decide on project visions;
 
 ####Phase 1  [Completed - Apr 28, 2016]
-![groupwalking](https://github.com/Q1an/Project-Tau/raw/master/source/walk.gif)
+![groupwalking](https://github.com/Q1an/Project-Tau/raw/master/source/walk.gif)   
 **iteration 1**   
 
 - design the mechanical structure of the robot; assemble prototypes;  
