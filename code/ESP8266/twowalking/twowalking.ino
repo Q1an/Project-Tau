@@ -15,6 +15,8 @@ ESP8266WiFiMulti WiFiMulti;
 Servo s1;
 Servo s2;
 
+HTTPClient http;
+
 int Servo_PIN1 = 12; //NodeMCU D6
 int Servo_PIN2 = 15; //NodeMCU D8
 
@@ -69,6 +71,18 @@ void setup() {
   displaySensorStatus();
   s1.attach(Servo_PIN1);
   s2.attach(Servo_PIN2);
+
+  while ((WiFiMulti.run() != WL_CONNECTED))
+  {
+    Serial.println("Wait for Wi-Fi connection...");
+    delay(100);
+  }
+
+//  http.setTimeout(10);
+  USE_SERIAL.print("[HTTP] begin...\n");
+  
+  /* configure server and url */
+  http.begin("http://192.168.1.74:8000/");
 }
 
 void loop() {
@@ -97,16 +111,9 @@ void loop() {
   {    
     Serial.println(currentTime - previousTime);
     previousTime = currentTime;
-    
+
     if((WiFiMulti.run() == WL_CONNECTED)) {
-
-        HTTPClient http;
-        http.setTimeout(10);
-        // USE_SERIAL.print("[HTTP] begin...\n");
-
-        /* configure server and url */
-        http.begin("http://192.168.1.74:8000/");
-
+      
         // USE_SERIAL.print("[HTTP] POST...\n");
                 
         uint8_t datasent[18];
@@ -140,7 +147,7 @@ void loop() {
             USE_SERIAL.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
         }
 
-        http.end();
+//        http.end();
     }
   }
 }
