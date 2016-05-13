@@ -22,6 +22,7 @@ int Servo_PIN2 = 15; //NodeMCU D8
 
 long previousTime = 0;
 long interval = 10000;
+long counter = 0;
 
 void displaySensorStatus(void)
 {
@@ -79,6 +80,7 @@ void setup() {
   }
 
 //  http.setTimeout(10);
+  http.setReuse(true);
   USE_SERIAL.print("[HTTP] begin...\n");
   
   /* configure server and url */
@@ -111,7 +113,14 @@ void loop() {
   {    
     Serial.println(currentTime - previousTime);
     previousTime = currentTime;
-
+    counter += 1;
+    
+    if (counter >= 300) {
+      counter = 0;
+      Serial.println("*** http re-start ***");
+      http.begin("http://192.168.1.74:8000/");
+    }
+    
     if((WiFiMulti.run() == WL_CONNECTED)) {
       
         // USE_SERIAL.print("[HTTP] POST...\n");
