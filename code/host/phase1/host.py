@@ -8,6 +8,7 @@ port = 8000
 address = ""
 
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+	protocol_version = "HTTP/1.1"
 	def do_GET(self):
 		print("======= GET Headers =======")
 		print(self.headers)
@@ -23,15 +24,21 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		globalvar.ay,globalvar.az,globalvar.ax= -d["euler_x"],-d["euler_y"],-d["euler_z"]
 		print(globalvar.ay,globalvar.az,globalvar.ax)
 
+		
+		
 		self.send_response(200)
-		self.end_headers()
-		self.wfile.write(str(globalvar.s1+100)+str(globalvar.s2+100)+str(globalvar.s3+100)+str(globalvar.s4+100))
+		#self.send_header("Connection","keep-alive")
+		self.end_headers() 
+		self.wfile.write("%s\r\n" % (str(globalvar.s1+100)+str(globalvar.s2+100)+str(globalvar.s3+100)+str(globalvar.s4+100)))
+		#self.wfile.close()
+		#print("woshibailezmb????--------------")
+		return
 		#SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 Handler = ServerHandler
 
 httpd = SocketServer.TCPServer(("", port), Handler)
-
+#httpd.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 print "Serving at: http://%(interface)s:%(port)s" % dict(interface=address or "localhost", port=port)
 
 def serv():

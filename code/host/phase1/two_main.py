@@ -18,12 +18,18 @@ def servogene():
 		# globalvar.s4=74
 		# globalvar.s3=74
 		# time.sleep(0.8)
-		globalvar.s1=165
-		globalvar.s2=165
-		time.sleep(0.3)
-		globalvar.s1=80
-		globalvar.s2=80
-		time.sleep(0.2)
+		#globalvar.s1=48
+		#time.sleep(0.1)
+		globalvar.s4=125
+		time.sleep(0.5)
+		#globalvar.s1=84
+		globalvar.s2=130
+		#globalvar.s3=127
+		globalvar.s4=90
+		time.sleep(0.5)
+		globalvar.s2=150
+		#globalvar.s3=147
+		time.sleep(0.1)
 		
 		print (globalvar.s1,globalvar.s2)
 
