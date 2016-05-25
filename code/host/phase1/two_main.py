@@ -37,9 +37,9 @@ if __name__=='__main__':
 	t1 = threading.Thread(target=host.serv, name='server')
 	t1.daemon = True
 	t1.start()
-	#t2 = threading.Thread(target=servogene, name='servogene')
-	#t2.daemon = True
-	#t2.start()
+	t2 = threading.Thread(target=servogene, name='servogene')
+	t2.daemon = True
+	t2.start()
 	servogene()
-	#graph.graph()
+	graph.graph()
 	sys.exit()

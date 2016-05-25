@@ -7,9 +7,16 @@ def twochartoint(twochar):
 		temp = -65536 + temp
 	return temp
 
+def fourchartolong(fourchar):
+	if len(fourchar) != 4:
+		print "Not a uint32"
+		return 0
+	ulong = ord(fourchar[0]) + (ord(fourchar[1]) << 8) + (ord(fourchar[2]) << 16) + (ord(fourchar[3]) << 24)
+	return ulong
 
 def imuparser(data):
-	if len(data)!=18:
+	# TODO: 18 -> 22
+	if len(data)!=22:
 		print("Not a valid IMU data")
 		return
 	dic = {}
@@ -22,10 +29,8 @@ def imuparser(data):
 	dic["euler_x"]=twochartoint(data[12:14])/16.0
 	dic["euler_y"]=twochartoint(data[14:16])/16.0
 	dic["euler_z"]=twochartoint(data[16:18])/16.0
+	dic["current_time"] = fourchartolong(data[18:22])
 	return dic
 
 def servomap(t,a,b,c,d):
 	return (b-a)/(d-c)*(t-c)+a
-
-
-

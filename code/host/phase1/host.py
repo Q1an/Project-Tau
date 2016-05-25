@@ -23,8 +23,7 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 		globalvar.ay,globalvar.az,globalvar.ax= -d["euler_x"],-d["euler_y"],-d["euler_z"]
 		print(globalvar.ay,globalvar.az,globalvar.ax)
-
-		
+		print "Time:", d["current_time"]		
 		
 		self.send_response(200)
 		#self.send_header("Connection","keep-alive")
