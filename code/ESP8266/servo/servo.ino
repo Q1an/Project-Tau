@@ -1,6 +1,6 @@
-#include <Servo.h>
+#include "VarSpeedServo.h"
 
-Servo s;
+VarSpeedServo s;
 int pos = 0;
 int Servo_PIN = 12; //NodeMCU D6
 
@@ -11,6 +11,6 @@ void setup() {
 
 void loop() {
   Serial.println("1500");
-  s.writeMicroseconds(1500);
-  delay(5000);
+  s.slowmove (90, 255);
+  delay(1000);
 }

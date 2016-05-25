@@ -4,11 +4,11 @@ import SocketServer
 import parse
 import globalvar
 
-port = 8000
+port = 7999
 address = ""
 
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-	protocol_version = "HTTP/1.1"
+	#protocol_version = "HTTP/1.1"
 	def do_GET(self):
 		print("======= GET Headers =======")
 		print(self.headers)
@@ -31,7 +31,6 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		self.wfile.write("%s\r\n" % (str(globalvar.s1+100)+str(globalvar.s2+100)+str(globalvar.s3+100)+str(globalvar.s4+100)))
 		#self.wfile.close()
 		#print("woshibailezmb????--------------")
-		return
 		#SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 Handler = ServerHandler

@@ -1,110 +1,220 @@
+#!/usr/bin/env python
+
+# NOTE: This will not run on the Raspberry PI itself
+# It is just a simple OpenGL program to visualise the orientation of the sensors
+
+import pygame
+import urllib
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import math
 from pygame.locals import *
-import pygame
 import globalvar
 
-def robot():
-	glBegin(GL_QUADS)	
-	glColor3f(0.0,1.0,0.0)
-	glVertex3f( 1.0, 0.2,-1.0)
-	glVertex3f(-1.0, 0.2,-1.0)		
-	glVertex3f(-1.0, 0.2, 1.0)		
-	glVertex3f( 1.0, 0.2, 1.0)		
+SCREEN_SIZE = (800, 800)
 
-	glColor3f(1.0,0.5,0.0)	
-	glVertex3f( 1.0,-0.2, 1.0)
-	glVertex3f(-1.0,-0.2, 1.0)		
-	glVertex3f(-1.0,-0.2,-1.0)		
-	glVertex3f( 1.0,-0.2,-1.0)		
-
-	glColor3f(1.0,0.0,0.0)		
-	glVertex3f( 1.0, 0.2, 1.0)
-	glVertex3f(-1.0, 0.2, 1.0)		
-	glVertex3f(-1.0,-0.2, 1.0)		
-	glVertex3f( 1.0,-0.2, 1.0)		
-
-	glColor3f(1.0,1.0,0.0)	
-	glVertex3f( 1.0,-0.2,-1.0)
-	glVertex3f(-1.0,-0.2,-1.0)
-	glVertex3f(-1.0, 0.2,-1.0)		
-	glVertex3f( 1.0, 0.2,-1.0)		
-
-	glColor3f(0.0,0.0,1.0)	
-	glVertex3f(-1.0, 0.2, 1.0)
-	glVertex3f(-1.0, 0.2,-1.0)		
-	glVertex3f(-1.0,-0.2,-1.0)		
-	glVertex3f(-1.0,-0.2, 1.0)		
-
-	glColor3f(1.0,0.0,1.0)	
-	glVertex3f( 1.0, 0.2,-1.0)
-	glVertex3f( 1.0, 0.2, 1.0)
-	glVertex3f( 1.0,-0.2, 1.0)		
-	glVertex3f( 1.0,-0.2,-1.0)		
-	glEnd()	
-
-def resize((width, height)):
-	if height==0:
-		height=1
-	glViewport(0, 0, width, height)
-	glMatrixMode(GL_PROJECTION)
-	glLoadIdentity()
-	gluPerspective(45, 1.0*width/height, 0.1, 100.0)
-	glMatrixMode(GL_MODELVIEW)
-	glLoadIdentity()
-
+def resize(width, height):
+    glViewport(0, 0, width, height)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(45.0, float(width) / height, 0.001, 10.0)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    print GL_PROJECTION
+    gluLookAt(1.0, 2.0, -5.0,
+              0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0)
+    
 def init():
-	glShadeModel(GL_SMOOTH)
-	glClearColor(0.0, 0.0, 0.0, 0.0)
-	glClearDepth(1.0)
-	glEnable(GL_DEPTH_TEST)
-	glDepthFunc(GL_LEQUAL)
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
+    glEnable(GL_DEPTH_TEST)
+    glClearColor(0.0, 0.0, 0.0, 0.0)
+    glShadeModel(GL_SMOOTH)
+    glEnable(GL_BLEND)
+    glEnable(GL_POLYGON_SMOOTH)
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+    glEnable(GL_COLOR_MATERIAL)
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glLightfv(GL_LIGHT0, GL_AMBIENT, (0.5, 0.5, 0.5, 1.0));
 
-def drawText(position, textString):     
-	font = pygame.font.SysFont ("Courier", 18, True)
-	textSurface = font.render(textString, True, (255,255,255,255), (0,0,0,255))     
-	textData = pygame.image.tostring(textSurface, "RGBA", True)     
-	glRasterPos3d(*position)     
-	glDrawPixels(textSurface.get_width(), textSurface.get_height(), GL_RGBA, GL_UNSIGNED_BYTE, textData)
+def run():
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE, HWSURFACE | OPENGL | DOUBLEBUF)
+    resize(*SCREEN_SIZE)
+    init()
+    clock = pygame.time.Clock()
+    cube = Cube((0.0, 0.0, 0.0), (0, 0, 1.0))
+    angle = 0
+    sornot=False
+    srx,sry,srz=2,2,2
+    fx,fy = 0,0
+    trajectory = [[0.0,0.0,0.0]]
+    while True:
+        
+        then = pygame.time.get_ticks()
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                return
+            if event.type == KEYUP and event.key == K_ESCAPE:
+                return
 
-def draw():
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
-	
-	glLoadIdentity()
-	glTranslatef(0,0.0,-7.0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    fx += 0.5
+                if event.key == pygame.K_RIGHT:
+                    fx -= 0.5
 
-	osd_text = "pitch: " + str("{0:.2f}".format(globalvar.ay)) + ", roll: " + str("{0:.2f}".format(globalvar.ax))
+                if event.key == pygame.K_UP:
+                    fy += 0.5
+                if event.key == pygame.K_DOWN:
+                    fy -= 0.5
+
+            # if event.type == pygame.MOUSEBUTTONDOWN:
+            #     if event.button == 4:
+            #         glTranslatef(0,0,1.0)
+
+            #     if event.button == 5:
+            #         glTranslatef(0,0,-1.0)
+        if sornot:
+            glScaled(0.5,0.5,0.5)
+            sornot=False
+            srx*=2
+            sry*=2
+
+        pitch = globalvar.ax
+        roll = globalvar.ay
+        yaw = globalvar.az
+        
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
 
-	osd_line = osd_text + ", yaw: " + str("{0:.2f}".format(globalvar.az))
+        # glLineWidth(2)
 
-	drawText((-2,-2, 2), osd_line)
+        # glBegin(GL_LINES)
+        # glColor((1., 0., 0.))
+        # glVertex3f(0, -1, 0)
+        # glVertex3f(0, 1, 0)
 
-	glRotatef(globalvar.ay, 0.0,1.0,0.0)  	  # Yaw,   rotate around y-axis
-	glRotatef(globalvar.ax ,1.0,0.0,0.0)      # Pitch, rotate around x-axis
-	glRotatef(globalvar.az ,0.0,0.0,1.0)      # Roll,  rotate around z-axis
-	robot()
+        # glColor((0., 1., 0.))
+        # glVertex3f(-1, 0, 0)
+        # glVertex3f(1, 0, 0)
 
-		 
+        # glColor((0., 0., 1.))
+        # glVertex3f(-0, 0, -1.5)
+        # glVertex3f(0, 0, 1)
+
+        # glEnd()
 
 
-def graph():
-	video_flags = OPENGL|DOUBLEBUF
-	pygame.init()
-	screen = pygame.display.set_mode((640,480), video_flags)
-	pygame.display.set_caption("Press Esc to quit, z toggles yaw mode")
-	resize((640,480))
-	init()
-	frames = 0
-	ticks = pygame.time.get_ticks()
-	while 1:
-		event = pygame.event.poll()
-		if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-			break       
-		draw()
-	  
-		pygame.display.flip()
-		frames = frames+1
+        glColor((1., 1., 1.))
+        glLineWidth(1)
+        glBegin(GL_LINES)
+        for l in xrange(len(trajectory)-1):
+            glVertex3f(*trajectory[l])
+            glVertex3f(*trajectory[l+1])
+        glEnd()
 
-	print "fps:  %d" % ((frames*1000)/(pygame.time.get_ticks()-ticks))
+        # for x in range(-40, 42, 2):
+        #     glVertex3f(x / 10., -1, -3)
+        #     glVertex3f(x / 10., -1, 3)
+        
+        # for x in range(-40, 42, 2):
+        #     glVertex3f(x / 10., -1, 1)
+        #     glVertex3f(x / 10., 1, 1)
+        
+        # for z in range(-20, 22, 2):
+        #     glVertex3f(-2, -1, z / 10.)
+        #     glVertex3f(2, -1, z / 10.)
+
+        # for z in range(-20, 22, 2):
+        #     glVertex3f(-2, -1, z / 10.)
+        #     glVertex3f(-2, 1, z / 10.)
+
+        # for z in range(-20, 22, 2):
+        #     glVertex3f(2, -1, z / 10.)
+        #     glVertex3f(2, 1, z / 10.)
+
+        # for y in range(-20, 22, 2):
+        #     glVertex3f(-2, y / 10., 1)
+        #     glVertex3f(2, y / 10., 1)
+        
+        # for y in range(-20, 22, 2):
+        #     glVertex3f(-2, y / 10., 1)
+        #     glVertex3f(-2, y / 10., -1)
+        
+        # for y in range(-20, 22, 2):
+        #     glVertex3f(2, y / 10., 1)
+        #     glVertex3f(2, y / 10., -1)
+        
+        # glEnd()
+        glPushMatrix()
+        glRotate(-float(yaw), 0, 1, 0)
+        glRotate(float(pitch), 1, 0, 0)
+        glRotate(-float(roll), 0, 0, 1)
+        if [fx,fy,0]!=trajectory[-1]:
+            trajectory.append([fx,fy,0])
+        if abs(fx)>srx or abs(fy)>sry:
+            sornot=True
+        glTranslatef(fx,0,0)
+        glTranslatef(0,fy,0)
+        cube.render()
+        glPopMatrix()
+        pygame.display.flip()
+        #print math.degrees(float(pitch)), math.degrees(-float(roll)), math.degrees(-float(yaw))
+
+
+class Cube(object):
+
+    def __init__(self, position, color):
+        self.position = position
+        self.color = color
+
+    # Cube information
+    num_faces = 6
+
+    vertices = [ (-0.5, -0.05, 1.0),
+                 (0.5, -0.05, 1.0),
+                 (0.5, 0.05, 1.0),
+                 (-0.5, 0.05, 1.0),
+                 (-0.5, -0.05, -1.0),
+                 (0.5, -0.05, -1.0),
+                 (0.5, 0.05, -1.0),
+                 (-0.5, 0.05, -1.0) ]
+
+    normals = [ (0.0, 0.0, +1.0),  # front
+                (0.0, 0.0, -1.0),  # back
+                (+1.0, 0.0, 0.0),  # right
+                (-1.0, 0.0, 0.0),  # left
+                (0.0, +1.0, 0.0),  # top
+                (0.0, -1.0, 0.0) ]  # bottom
+
+    vertex_indices = [ (0, 1, 2, 3),  # front
+                       (4, 5, 6, 7),  # back
+                       (1, 5, 6, 2),  # right
+                       (0, 4, 7, 3),  # left
+                       (3, 2, 6, 7),  # top
+                       (0, 1, 5, 4) ]  # bottom
+
+    def render(self):
+        then = pygame.time.get_ticks()
+        vertices = self.vertices
+        # Draw all 6 faces of the cube
+        glBegin(GL_QUADS)
+
+        for face_no in xrange(self.num_faces):
+            
+            if face_no == 1:
+                glColor(1.0, 0.0, 0.0)
+            else:
+                glColor(self.color)
+            
+            # glNormal3dv(self.normals[face_no])
+            # v1, v2, v3, v4 = self.vertex_indices[face_no]
+            # glVertex(vertices[v1])
+            # glVertex(vertices[v2])
+            # glVertex(vertices[v3])
+            # glVertex(vertices[v4])
+        glEnd()
+
+if __name__ == "__main__":
+    run()

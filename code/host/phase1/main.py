@@ -58,5 +58,5 @@ if __name__=='__main__':
 	t2.daemon = True
 	t2.start()
 
-	graph.graph()
+	graph.run()
 	sys.exit()

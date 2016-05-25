@@ -15,7 +15,6 @@ def fourchartolong(fourchar):
 	return ulong
 
 def imuparser(data):
-	# TODO: 18 -> 22
 	if len(data)!=22:
 		print("Not a valid IMU data")
 		return
