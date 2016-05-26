@@ -2,7 +2,7 @@
 #include "Adafruit_BNO055.h"
 #include "imumaths.h"
 	
-#define BNO055_SAMPLERATE_DELAY_MS (100)
+#define BNO055_SAMPLERATE_DELAY_MS (500)
 
 Adafruit_BNO055 bno = Adafruit_BNO055();
 
@@ -72,28 +72,28 @@ void loop(void)
 	Serial.print(euler.z());
 	Serial.println("\t");
 	
-	imu::Vector<3> lineacc = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
+	// imu::Vector<3> lineacc = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
 	
-	Serial.println("Linear Acc: ");
-	Serial.print("X: ");
-	Serial.print(lineacc.x(), 4); 
-	Serial.print(" Y: ");
-	Serial.print(lineacc.y(), 4); 
-	Serial.print(" Z: ");
-	Serial.print(lineacc.z(), 4); 
-	Serial.println("\t");
+	// Serial.println("Linear Acc: ");
+	// Serial.print("X: ");
+	// Serial.print(lineacc.x(), 4); 
+	// Serial.print(" Y: ");
+	// Serial.print(lineacc.y(), 4); 
+	// Serial.print(" Z: ");
+	// Serial.print(lineacc.z(), 4); 
+	// Serial.println("\t");
 	
-	imu::Vector<3> anguvel = bno.getVector(Adafruit_BNO055::VECTOR_GYROSCOPE);
+	// imu::Vector<3> anguvel = bno.getVector(Adafruit_BNO055::VECTOR_GYROSCOPE);
 
-	/* Display the floating point data */
-	Serial.println("Angular velocity: ");
-	Serial.print("X: ");
-	Serial.print(anguvel.x());
-	Serial.print(" Y: ");
-	Serial.print(anguvel.y());
-	Serial.print(" Z: ");
-	Serial.print(anguvel.z());
-	Serial.println("\t");
+	// /* Display the floating point data */
+	// Serial.println("Angular velocity: ");
+	// Serial.print("X: ");
+	// Serial.print(anguvel.x());
+	// Serial.print(" Y: ");
+	// Serial.print(anguvel.y());
+	// Serial.print(" Z: ");
+	// Serial.print(anguvel.z());
+	// Serial.println("\t");
 	/*
 	// Quaternion data
 	imu::Quaternion quat = bno.getQuat();
