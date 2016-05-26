@@ -51,7 +51,7 @@ def resize((width, height)):
 	glLoadIdentity()
 	gluPerspective(45, 1.0*width/height, 0.1, 100.0)
 	glMatrixMode(GL_MODELVIEW)
-	glLoadIdentity()
+	glLoadIdentity() 
 
 def init():
 	glShadeModel(GL_SMOOTH)

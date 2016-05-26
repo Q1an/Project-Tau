@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-
-# NOTE: This will not run on the Raspberry PI itself
-# It is just a simple OpenGL program to visualise the orientation of the sensors
-
 import pygame
 import urllib
 from OpenGL.GL import *
@@ -17,10 +12,9 @@ def resize(width, height):
     glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(45.0, float(width) / height, 0.001, 10.0)
+    gluPerspective(45.0, float(width) / height, 0.1, 10.0)
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
-    print GL_PROJECTION
     gluLookAt(1.0, 2.0, -5.0,
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0)
@@ -43,14 +37,22 @@ def run():
     resize(*SCREEN_SIZE)
     init()
     clock = pygame.time.Clock()
-    cube = Cube((0.0, 0.0, 0.0), (0, 0, 1.0))
+    cube = Cube((0.0, 0.0, 0.0), (.0, .0, .5))
     angle = 0
-    sornot=False
-    srx,sry,srz=2,2,2
+
+    sornot = False
+    srx,sry,srz = 2,2,2
     fx,fy = 0,0
     trajectory = [[0.0,0.0,0.0]]
+    up = 0
     while True:
-        
+        up+=1
+        if up > 120:
+            up = 0
+            trajectory = [[0.0,0.0,0.0]]
+            globalvar.v=[0.0,0.0,0.0]
+            globalvar.p=[0.0,0.0,0.0]
+
         then = pygame.time.get_ticks()
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -60,14 +62,14 @@ def run():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    fx += 0.5
+                    globalvar.p[0] += 0.5
                 if event.key == pygame.K_RIGHT:
-                    fx -= 0.5
+                    globalvar.p[0] -= 0.5
 
                 if event.key == pygame.K_UP:
-                    fy += 0.5
+                    globalvar.p[1] += 0.5
                 if event.key == pygame.K_DOWN:
-                    fy -= 0.5
+                    globalvar.p[1] -= 0.5
 
             # if event.type == pygame.MOUSEBUTTONDOWN:
             #     if event.button == 4:
@@ -80,9 +82,10 @@ def run():
             sornot=False
             srx*=2
             sry*=2
+            srz*=2
 
-        pitch = globalvar.ax
-        roll = globalvar.ay
+        pitch = globalvar.ay
+        roll = globalvar.ax
         yaw = globalvar.az
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -113,7 +116,6 @@ def run():
             glVertex3f(*trajectory[l])
             glVertex3f(*trajectory[l+1])
         glEnd()
-
         # for x in range(-40, 42, 2):
         #     glVertex3f(x / 10., -1, -3)
         #     glVertex3f(x / 10., -1, 3)
@@ -148,15 +150,19 @@ def run():
         
         # glEnd()
         glPushMatrix()
-        glRotate(-float(yaw), 0, 1, 0)
-        glRotate(float(pitch), 1, 0, 0)
-        glRotate(-float(roll), 0, 0, 1)
-        if [fx,fy,0]!=trajectory[-1]:
-            trajectory.append([fx,fy,0])
-        if abs(fx)>srx or abs(fy)>sry:
+
+        np = globalvar.p[:]
+        if np!=trajectory[-1]:
+            np[0],np[1],np[2]=-np[0],np[2],np[1]
+            trajectory.append(np[:])
+        if abs(np[0])>srx or abs(np[1])>sry or abs(np[2])>srz:
             sornot=True
-        glTranslatef(fx,0,0)
-        glTranslatef(0,fy,0)
+        glTranslatef(np[0],0,0)
+        glTranslatef(0,np[1],0)
+        glTranslatef(0,0,np[2])
+        glRotate(float(yaw), 0, 1, 0)
+        glRotate(-float(pitch), 1, 0, 0)
+        glRotate(float(roll), 0, 0, 1)
         cube.render()
         glPopMatrix()
         pygame.display.flip()
@@ -203,17 +209,17 @@ class Cube(object):
 
         for face_no in xrange(self.num_faces):
             
-            if face_no == 1:
+            if face_no == 0:
                 glColor(1.0, 0.0, 0.0)
             else:
                 glColor(self.color)
             
-            # glNormal3dv(self.normals[face_no])
-            # v1, v2, v3, v4 = self.vertex_indices[face_no]
-            # glVertex(vertices[v1])
-            # glVertex(vertices[v2])
-            # glVertex(vertices[v3])
-            # glVertex(vertices[v4])
+            glNormal3dv(self.normals[face_no])
+            v1, v2, v3, v4 = self.vertex_indices[face_no]
+            glVertex(vertices[v1])
+            glVertex(vertices[v2])
+            glVertex(vertices[v3])
+            glVertex(vertices[v4])
         glEnd()
 
 if __name__ == "__main__":

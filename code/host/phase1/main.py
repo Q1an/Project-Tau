@@ -25,7 +25,7 @@ def servogene():
 		# s4 = 50
 
 
-		# globalvar.s4=105
+		# global`var.s4=105
 		# globalvar.s3=105
 		# globalvar.s1=74
 		# globalvar.s2=74
