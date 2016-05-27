@@ -37,7 +37,7 @@ def imuparser(data):
 	dic["quaternion_z"] = twochartoint(data[24:26])/16384.0
 	globalvar.timeold = globalvar.timenew
 	globalvar.timenew = fourchartolong(data[26:30])/1000000.0
-	print (globalvar.timeold,globalvar.timenew)
+	#print (globalvar.timeold,globalvar.timenew)
 	dic["current_time"] = fourchartolong(data[26:30])/1000000.0
 	return dic
 

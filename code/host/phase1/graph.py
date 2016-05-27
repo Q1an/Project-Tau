@@ -44,14 +44,10 @@ def run():
     srx,sry,srz = 2,2,2
     fx,fy = 0,0
     trajectory = [[0.0,0.0,0.0]]
-    up = 0
     while True:
-        up+=1
-        if up > 120:
-            up = 0
+        if globalvar.ncycle==1:
             trajectory = [[0.0,0.0,0.0]]
-            globalvar.v=[0.0,0.0,0.0]
-            globalvar.p=[0.0,0.0,0.0]
+            globalvar.ncycle=0
 
         then = pygame.time.get_ticks()
         for event in pygame.event.get():
