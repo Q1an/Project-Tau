@@ -42,12 +42,14 @@ def run():
 
     sornot = False
     srx,sry,srz = 2,2,2
-    fx,fy = 0,0
     trajectory = [[0.0,0.0,0.0]]
+    wcycle = True
     while True:
-        if globalvar.ncycle==1
+        if wcycle and globalvar.cycle_start:
             trajectory = [[0.0,0.0,0.0]]
-            globalvar.ncycle=0
+            wcycle = False
+        if globalvar.cycle_end:
+            wcycle = True
 
         then = pygame.time.get_ticks()
         for event in pygame.event.get():

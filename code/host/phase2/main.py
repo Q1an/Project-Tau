@@ -9,33 +9,6 @@ import os
 
 def servogene():
 	while 1:
-		#s4 right black
-		#s1 left black
-		#s2 left yellow
-		#s3 right black
-		# s2 = 130
-		# time.sleep(1)
-		# s2 = 50
-		# time.sleep(1)
-		# s3 = 130
-		# time.sleep(1)
-		# s3 = 50
-		# time.sleep(1)
-		# s4 = 130
-		# time.sleep(1)
-		# s4 = 50
-
-
-		# global`var.s4=105
-		# globalvar.s3=105
-		# globalvar.s1=74
-		# globalvar.s2=74
-		# time.sleep(0.8)
-		# globalvar.s1=105
-		# globalvar.s2=105
-		# globalvar.s4=74
-		# globalvar.s3=74
-		# time.sleep(0.8)
 		globalvar.s1=48
 		time.sleep(0.1)
 		globalvar.s4=44
@@ -51,7 +24,7 @@ def servogene():
 		
 		print (globalvar.s1,globalvar.s2,globalvar.s3,globalvar.s4)
 
-if __name__=='__main__':
+def P1():
 	t1 = threading.Thread(target=host.serv, name='server')
 	t1.daemon = True
 	t1.start()
@@ -61,3 +34,18 @@ if __name__=='__main__':
 
 	graph.run()
 	sys.exit()
+
+def P2():
+	while True:
+		print "aloha"
+		time.sleep(1)
+
+if __name__=='__main__':
+	p1 = Process(target=P1)
+	p2 = Process(target=P2)
+	p1.start()
+	p2.start()
+	p1.join()
+	p2.terminate()
+
+

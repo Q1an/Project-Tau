@@ -1,6 +1,7 @@
 import math
 import numpy
 import globalvar
+
 def twochartoint(twochar):
 	if len(twochar)!=2:
 		print("Not a uint16")
@@ -35,9 +36,6 @@ def imuparser(data):
 	dic["quaternion_x"] = twochartoint(data[20:22])/16384.0
 	dic["quaternion_y"] = twochartoint(data[22:24])/16384.0
 	dic["quaternion_z"] = twochartoint(data[24:26])/16384.0
-	globalvar.timeold = globalvar.timenew
-	globalvar.timenew = fourchartolong(data[26:30])/1000000.0
-	#print (globalvar.timeold,globalvar.timenew)
 	dic["current_time"] = fourchartolong(data[26:30])/1000000.0
 	return dic
 
@@ -66,7 +64,7 @@ def euler_from_quaternion(matrix):
 
     ax, ay, az = -ax, -ay, -az
     ax, az = az, ax
-    return ax, ay, az
+    return [ax, ay, az]
 
 def servomap(t,a,b,c,d):
 	return (b-a)/(d-c)*(t-c)+a
