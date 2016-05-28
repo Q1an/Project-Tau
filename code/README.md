@@ -21,3 +21,16 @@ phase2: Programs for phase 2, with framework as shown in the picture below:
 where X,Y,Z are 16bits unsigned int  
 ### host → ESP8266
 servo control signals
+
+#TODO
++ Too many threads in one cpu core -> high temperature -> introduce multi processes
+
++ need to wait for the file io operation , otherwise cannot record the complete data
+
++ where to check the overturn, now it is in the graph :)
+
++ need to create a robot object and use manager() to share among processes
+
++ Graph be a seperate thread?
+
++ the format of the data stored

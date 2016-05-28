@@ -19,3 +19,7 @@ data_received_q = Queue.Queue()
 cycle_start, cycle_end = False, False
 # strategy_q
 strategy_q = Queue.Queue()
+# buffer_q
+buffer_q = Queue.Queue()
+
+temps = ""

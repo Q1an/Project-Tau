@@ -5,6 +5,7 @@ from OpenGL.GLU import *
 import math
 from pygame.locals import *
 import globalvar
+import time
 
 SCREEN_SIZE = (800, 800)
 
@@ -45,9 +46,10 @@ def run():
     trajectory = [[0.0,0.0,0.0]]
     wcycle = True
     while True:
+        time.sleep(0.02)
         if globalvar.OVERTURN:
             return
-        print globalvar.cycle_start,globalvar.cycle_end
+
         if wcycle and globalvar.cycle_start:
             trajectory = [[0.0,0.0,0.0]]
             wcycle = False

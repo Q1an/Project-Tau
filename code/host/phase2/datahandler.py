@@ -19,9 +19,11 @@ def handler():
 				# velovity and position calculation
 				globalvar.acc = [d["linearacc_x"], d["linearacc_y"], -d["linearacc_z"]]
 				vpintegrate(globalvar.acc,tv)
+				tempb = [globalvar.p[1]]+ globalvar.eu + globalvar.acc + globalvar.v + globalvar.p
 				if globalvar.cycle_start and not globalvar.cycle_end:
-					buffer.append(d)
+					buffer.append(tempb)
 				elif globalvar.cycle_end and buffer !=[]:
+					globalvar.buffer_q.put(buffer)
 					#send buffer`
 					buffer = []
 			else:
