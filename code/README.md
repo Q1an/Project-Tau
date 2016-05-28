@@ -8,7 +8,7 @@ Dataprocess: An integrated program that can send the data from IMU to the Host v
 simpleserver: A simple server program that can printout the HTTP GET and POST requests  
 phase1: The program for phase 1, include a simple visualization using OPENGL 
 phase2: Programs for phase 2, with framework as shown in the picture below:
-![framework](https://github.com/Q1an/Project-Tau/raw/master/code/host.graffle)
+![framework](https://github.com/Q1an/Project-Tau/raw/master/source/host.eps)
 
 ## Communication Format
 ### ESP8266 → host
