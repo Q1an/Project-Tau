@@ -4,9 +4,11 @@ import time, threading
 import host
 import graph
 import datahandler
+import servogene
 import sys
 from multiprocessing import Process
 import os
+
 
 def servogene():
 	while 1:
@@ -32,6 +34,10 @@ def P1():
 	t2 = threading.Thread(target=datahandler.handler, name='datahandler')
 	t2.daemon = True
 	t2.start()
+	t3 = threading.Thread(target=datahandler.handler, name='datahandler')
+	t3.daemon = True
+	t3.start()
+
 
 	graph.run()
 	sys.exit()
