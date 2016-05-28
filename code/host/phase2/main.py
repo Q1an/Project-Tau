@@ -6,53 +6,47 @@ import graph
 import datahandler
 import servogene
 import sys
+import monitor
 from multiprocessing import Process
 import os
 
-
-def servogene():
-	while 1:
-		globalvar.s1=48
-		time.sleep(0.1)
-		globalvar.s4=44
-		time.sleep(0.5)
-		globalvar.s1=84
-		globalvar.s2=120
-		globalvar.s3=127
-		globalvar.s4=82
-		time.sleep(0.5)
-		globalvar.s2=140
-		globalvar.s3=147
-		time.sleep(0.1)
-		
-		print (globalvar.s1,globalvar.s2,globalvar.s3,globalvar.s4)
+def ml():
+	while True:
+		globalvar.strategy_q.put([ 5, 17, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])
+		time.sleep(3)
 
 def P1():
+	# t4 = threading.Thread(target=graph.run, name='graph')
+	# t4.daemon = True
+	# t4.start()
+	# time.sleep(5)
 	t1 = threading.Thread(target=host.serv, name='server')
 	t1.daemon = True
 	t1.start()
 	t2 = threading.Thread(target=datahandler.handler, name='datahandler')
 	t2.daemon = True
 	t2.start()
-	t3 = threading.Thread(target=datahandler.handler, name='datahandler')
+	t3 = threading.Thread(target=servogene.servo_gene, name='servo_generation')
 	t3.daemon = True
 	t3.start()
 
-
+	t5 = threading.Thread(target=monitor.monitor, name='monitor')
+	t5.daemon = True
+	t5.start()
+	t6 = threading.Thread(target=ml, name='ml')
+	t6.daemon = True
+	t6.start()
 	graph.run()
 	sys.exit()
 
-def P2():
-	while True:
-		print "aloha"
-		time.sleep(1)
-
 if __name__=='__main__':
+	fo = open('stand.txt', 'w+')
+
 	p1 = Process(target=P1)
-	p2 = Process(target=P2)
 	p1.start()
-	p2.start()
+	# p2 = Process(target=P2, args=(fo,))
+	# p2.start()
 	p1.join()
-	p2.terminate()
+	# p2.terminate()
 
-
+	fo.close()

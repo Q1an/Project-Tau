@@ -13,11 +13,14 @@ def servo_gene():
 		#          --------- prefix ---------
 
 		walk = globalvar.strategy_q.get(True)
+
 		walk.append(END_RECOVER_SLEEP_TIME)
 		prefix_len, config_len, recover_index = 2, walk[0], walk[1] 
 
 		# start of walking
-		cycle_start, cycle_end = True, False
+		globalvar.p = [0.0,0.0,0.0]
+		globalvar.v = [0.0,0.0,0.0]
+		globalvar.cycle_start, globalvar.cycle_end = True, False
 
 		for i in range(prefix_len, len(walk), config_len):
 			for j in range(config_len - 1):
@@ -28,8 +31,9 @@ def servo_gene():
 
 			if i == recover_index:
 				# start of recovering
+				globalvar.cycle_start, globalvar.cycle_end = False, True
 				time.sleep(END_WALK_SLEEP_TIME)
-				cycle_start, cycle_end = False, True
+				
 
 if __name__ == "__main__":
 	globalvar.strategy_q.put([ 5, 16, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])

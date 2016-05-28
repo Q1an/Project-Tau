@@ -45,6 +45,9 @@ def run():
     trajectory = [[0.0,0.0,0.0]]
     wcycle = True
     while True:
+        if globalvar.OVERTURN:
+            return
+        print globalvar.cycle_start,globalvar.cycle_end
         if wcycle and globalvar.cycle_start:
             trajectory = [[0.0,0.0,0.0]]
             wcycle = False
