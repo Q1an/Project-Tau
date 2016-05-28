@@ -90,7 +90,7 @@ void loop() {
 	 * - VECTOR_GRAVITY       - m/s^2
 	 */
 
-	uint8_t datasent[22]; memset(datasent, 0, 22);
+	uint8_t datasent[30]; memset(datasent, 0, 30);
 
 	currTime = micros();
 	Serial.println(currTime - prevTime);
@@ -99,16 +99,17 @@ void loop() {
 	bno.getData(Adafruit_BNO055::VECTOR_GYROSCOPE, datasent);
 	bno.getData(Adafruit_BNO055::VECTOR_LINEARACCEL, datasent + 6);
 	bno.getData(Adafruit_BNO055::VECTOR_EULER, datasent + 12);
+	bno.getQuat(datasent + 18);
 	
 	if((WiFiMulti.run() == WL_CONNECTED)) {
 
 		HTTPClient http;
 		http.begin("http://192.168.1.74:8000/");
 
-		datasent[18] = (currTime & 0x000000ff);
-		datasent[19] = (currTime & 0x0000ff00) >> 8;
-		datasent[20] = (currTime & 0x00ff0000) >> 16;
-		datasent[21] = (currTime & 0xff000000) >> 24;
+		datasent[26] = (currTime & 0x000000ff);
+		datasent[27] = (currTime & 0x0000ff00) >> 8;
+		datasent[28] = (currTime & 0x00ff0000) >> 16;
+		datasent[29] = (currTime & 0xff000000) >> 24;
 		
 		time1 = micros();
 		int httpCode = http.POST(datasent, sizeof(datasent));

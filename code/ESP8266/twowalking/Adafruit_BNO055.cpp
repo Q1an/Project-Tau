@@ -342,6 +342,11 @@ void Adafruit_BNO055::getData(adafruit_vector_type_t vector_type, uint8_t data[]
   readLen((adafruit_bno055_reg_t)vector_type, data, 6);
 }
 
+void Adafruit_BNO055::getQuat(uint8_t data[])
+{
+  readLen(BNO055_QUATERNION_DATA_W_LSB_ADDR, data, 8);
+}
+
 /**************************************************************************/
 /*!
     @brief  Gets a quaternion reading from the specified source

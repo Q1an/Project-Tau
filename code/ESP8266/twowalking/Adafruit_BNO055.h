@@ -297,6 +297,7 @@ class Adafruit_BNO055 : public Adafruit_Sensor
     void  getCalibration      ( uint8_t* system, uint8_t* gyro, uint8_t* accel, uint8_t* mag);
 
     void getData ( adafruit_vector_type_t vector_type, uint8_t data[] );
+    void getQuat (uint8_t data[]);
     imu::Vector<3>  getVector ( adafruit_vector_type_t vector_type );
     imu::Quaternion getQuat   ( void );
     int8_t          getTemp   ( void );
