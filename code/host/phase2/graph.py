@@ -82,10 +82,7 @@ def run():
             sry*=2
             srz*=2
 
-        pitch = globalvar.ay
-        roll = globalvar.ax
-        yaw = globalvar.az
-        
+        [roll, pitch, yaw] = globalvar.eu
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
 

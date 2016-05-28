@@ -45,7 +45,7 @@ def run():
     fx,fy = 0,0
     trajectory = [[0.0,0.0,0.0]]
     while True:
-        if globalvar.ncycle==1
+        if globalvar.ncycle==1:
             trajectory = [[0.0,0.0,0.0]]
             globalvar.ncycle=0
 

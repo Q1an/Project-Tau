@@ -3,6 +3,7 @@ import globalvar
 import time, threading
 import host
 import graph
+import datahandler
 import sys
 from multiprocessing import Process
 import os
@@ -28,7 +29,7 @@ def P1():
 	t1 = threading.Thread(target=host.serv, name='server')
 	t1.daemon = True
 	t1.start()
-	t2 = threading.Thread(target=servogene, name='servogene')
+	t2 = threading.Thread(target=datahandler.handler, name='datahandler')
 	t2.daemon = True
 	t2.start()
 

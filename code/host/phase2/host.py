@@ -14,16 +14,16 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 	def do_POST(self):
-		print("======= POST Headers =======")
-		print(self.headers)
-		print("======= IMU Values =======")
+		#print("======= POST Headers =======")
+		#print(self.headers)
+		#print("======= IMU Values =======")
 		if self.headers.getheader('content-length'):
 			d = self.rfile.read(int(self.headers.getheader('content-length')))
 			globalvar.data_received_q.put(d)
 		self.send_response(200)
 		#self.send_header("Connection","keep-alive")
 		self.end_headers() 
-		self.wfile.write("%s\r\n" % (str(globalvar.s1+100)+str(globalvar.s2+100)+str(globalvar.s3+100)+str(globalvar.s4+100)))
+		self.wfile.write("%s\r\n" % (str(globalvar.s[0]+100)+str(globalvar.s[1]+100)+str(globalvar.s[2]+100)+str(globalvar.s[2]+100)))
 		#self.wfile.close()
 		#SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 

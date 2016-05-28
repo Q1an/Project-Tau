@@ -1,6 +1,8 @@
 import parse
+import globalvar
+import math
 
-def datahandler():
+def handler():
 	buffer = []
 	while True:
 		d = globalvar.data_received_q.get(True)
@@ -28,10 +30,10 @@ def datahandler():
 def updateeuler(d):
 	quavec = [d["quaternion_w"],d["quaternion_x"],d["quaternion_y"],d["quaternion_z"]]
 	quamat = parse.quaternion_matrix(quavec)
-	[globalvar.ax,globalvar.ay,globalvar.az] = map(math.degrees, parse.euler_from_quaternion(quamat))
+	globalvar.eu = map(math.degrees, parse.euler_from_quaternion(quamat))
 
 def vpintegrate(acc,tv):
-	for i in len(xrange(acc)):
+	for i in xrange(len(acc)):
 		if acc[i] > 0.1:
 			globalvar.p[i] += globalvar.v[i]*tv + 0.5*acc[i]*tv*tv
 			globalvar.v[i] += tv*acc[i]

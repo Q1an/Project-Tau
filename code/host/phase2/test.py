@@ -1,7 +1,6 @@
 from multiprocessing import Process, Queue
 import os, time, random
 
-
 def write(q):
     print('Process to write: %s' % os.getpid())
     for value in ['A', 'B', 'C']:
