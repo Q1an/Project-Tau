@@ -33,8 +33,8 @@ def servo_gene():
 					# set s[ ... + delay ]
 					globalvar.s[j] = walk[i + j]
 				# sleep for s[delay]
-				print globalvar.s
-				print "wait for: %f" % (walk[i + config_len - 1])
+				#print globalvar.s
+				#print "wait for: %f" % (walk[i + config_len - 1])
 				time.sleep(walk[i + config_len - 1])
 
 				if i == recover_index:
@@ -43,5 +43,5 @@ def servo_gene():
 					cycle_start, cycle_end = False, True
 
 if __name__ == "__main__":
-	globalvar.strategy_q.put([ 5, 16, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30 ])
+	globalvar.strategy_q.put([ 5, 16, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])
 	servo_gene()
