@@ -1,7 +1,7 @@
 import globalvar
 import time
 
-# globalvar: strategy_q, s = [0,0,0,0,delay]
+# globalvar: strategy_q, s = [0,0,0,0]
 
 def servo_gene():
 
@@ -15,7 +15,7 @@ def servo_gene():
 			print " NO NEW WALKING STRATEGY "
 			print " *********************** "
 
-			time.sleep(1)
+			time.sleep(10)
 		else:
 
 			# walk = [ config_len , recover_index , servo1 angle , ... , delay , servo1 angle , ... , delay ]
@@ -29,7 +29,7 @@ def servo_gene():
 			cycle_start, cycle_end = True, False
 
 			for i in range(prefix_len, len(walk), config_len):
-				for j in range(config_len):
+				for j in range(config_len - 1):
 					# set s[ ... + delay ]
 					globalvar.s[j] = walk[i + j]
 				# sleep for s[delay]
