@@ -203,3 +203,6 @@ flycheck_*.el
 
 # projectiles files
 .projectile
+
+# Custom
+/code/host/phase2/temp.py
