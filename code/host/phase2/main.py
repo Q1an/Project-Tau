@@ -9,15 +9,19 @@ import monitor
 from multiprocessing import Process, Manager
 import os
 
+
 def P2(fo,strategy_q,buffer_q):
+	ns = [ 4, 10, 150, 90, 90, 90, 1]
 	while True:
-		strategy_q.put([ 4, 17, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])
-		print "strate generated"
-		# while not globalvar.buffer_q.empty():
-		# 	b = globalvar.buffer_q.get()
+		strategy_q.put(ns)
+		print "strategy generated ",
+		print ns
+		while buffer_q.empty():
+			time.sleep(0.01)
+		b = buffer_q.get()
 		# 	# fo.write(str(b)+'\n')
 		# 	# fo.write("@@@@@@@@@@@@@@@@@@@@@@@@@")
-		# 	# fo.write(str(b[-1][0])+'\n')
+		fo.write(str(b[-1][0])+'\n')
 		# 	globalvar.temps+=str(b[-1][0])+'\n'
 
 		time.sleep(3)
@@ -46,8 +50,6 @@ def P1(fo,strategy_q,buffer_q):
 	# t6.daemon = True
 	# t6.start()
 	graph.run()
-	
-	time.sleep(2)
 	sys.exit()
 
 if __name__=='__main__':

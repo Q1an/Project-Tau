@@ -1,6 +1,6 @@
-def
+def sg(fo,strategy_q,buffer_q):
 	while True:
-		strategy_q.put([ 4, 17, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])
+		strategy_q.put()
 		print "strate generated"
 		# while not globalvar.buffer_q.empty():
 		# 	b = globalvar.buffer_q.get()

@@ -41,7 +41,7 @@ def updateeuler(d):
 
 def vpintegrate(acc,tv):
 	for i in xrange(len(acc)):
-		if acc[i] > 0.1:
+		if abs(acc[i]) > 0.1:
 			globalvar.p[i] += globalvar.v[i]*tv + 0.5*acc[i]*tv*tv
 			globalvar.v[i] += tv*acc[i]
 

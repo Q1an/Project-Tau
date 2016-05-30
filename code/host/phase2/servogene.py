@@ -6,11 +6,15 @@ import time
 #         			 --------- prefix ---------	  ------------ learning strategy ------------	---------- recovering strategy ----------
 #																			   					recover index: the starting index of recovering process
 
+# single servo strategy sss = [angle, time, angle, time,......]
+# sl = [no_of servo, recover_time, sss, sss, sss]
+# need to consider in phase 3 or later.
+
 PREFIX_LEN = 2
 
 def servo_gene(strategy_q):
 
-	END_WALK_SLEEP_TIME = 0.5 # in seconds
+	END_WALK_SLEEP_TIME = 0.0 # in seconds
 	END_RECOVER_SLEEP_TIME = 0.5 # in seconds
 
 	while True:
@@ -40,14 +44,16 @@ def servo_gene(strategy_q):
 						# start of recovering
 						globalvar.cycle_start, globalvar.cycle_end = False, True
 						time.sleep(END_WALK_SLEEP_TIME)
-				
+				globalvar.cycle_start, globalvar.cycle_end = False, True
+				time.sleep(END_WALK_SLEEP_TIME)
+			
 def check_strategy_format(walk):
 	if len(walk) <= 0:
 		print " **************** "
 		print " invalid strategy: empty strategy "
 		print " **************** "
 		return False
-	elif (len(walk) - PREFIX_LEN) % walk[0] != 0:
+	elif (len(walk) - PREFIX_LEN) % (walk[0]+1) != 0:
 		print " **************** "
 		print " invalid strategy: length unmatch number of servo"
 		print walk
@@ -55,6 +61,6 @@ def check_strategy_format(walk):
 		return False
 	return True
 
-if __name__ == "__main__":
-	globalvar.strategy_q.put([ 4, 16, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])
-	servo_gene()
+# if __name__ == "__main__":
+	# strategy_q.put([ 4, 10, 150, 90, 90, 90, 1])
+	# servo_gene()
