@@ -1,7 +1,10 @@
 import globalvar
 import time
 
-# globalvar: strategy_q, s = [0,0,0,0]
+# strategy info: number of servo, learning strategy, recover to initial state strategy
+# strategy list = [ no_of_servo , recover_index , servo_1 angle , ... , servo_n angle , delay , servo_1 angle , ... , servo_n angle, delay ]
+#         			 --------- prefix ---------	  ------------ learning strategy ------------	---------- recovering strategy ----------
+#																			   					↑ recover index: the starting index of recovering process
 
 def servo_gene():
 
@@ -9,25 +12,23 @@ def servo_gene():
 	END_RECOVER_SLEEP_TIME = 1 # in seconds
 
 	while True:
-		# walk = [ config_len , recover_index , servo1 angle , ... , delay , servo1 angle , ... , delay ]
-		#          --------- prefix ---------
 
 		walk = globalvar.strategy_q.get(True)
 
 		walk.append(END_RECOVER_SLEEP_TIME)
-		prefix_len, config_len, recover_index = 2, walk[0], walk[1] 
+		prefix_len, no_of_servo, recover_index = 2, walk[0], walk[1] 
 
 		# start of walking
 		globalvar.p = [0.0,0.0,0.0]
 		globalvar.v = [0.0,0.0,0.0]
 		globalvar.cycle_start, globalvar.cycle_end = True, False
 
-		for i in range(prefix_len, len(walk), config_len):
-			for j in range(config_len - 1):
+		for i in range(prefix_len, len(walk), no_of_servo + 1):
+			for j in range(no_of_servo):
 				# set s[ ... + delay ]
 				globalvar.s[j] = walk[i + j]
 			# sleep for s[delay]
-			time.sleep(walk[i + config_len - 1])
+			time.sleep(walk[i + no_of_servo])
 
 			if i == recover_index:
 				# start of recovering
@@ -36,5 +37,5 @@ def servo_gene():
 				
 
 if __name__ == "__main__":
-	globalvar.strategy_q.put([ 5, 16, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])
+	globalvar.strategy_q.put([ 4, 16, 90, 90, 90, 90, 1, 150, 150, 90, 90, 0.8, 90, 90, 90, 90, 0.8, 150, 30, 90, 90 ])
 	servo_gene()
