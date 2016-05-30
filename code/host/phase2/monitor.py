@@ -1,5 +1,5 @@
 import globalvar
-
+import time	
 # globalvar: euler_x, euler_y, euler_z, OVERTURN
 
 def monitor():
@@ -8,6 +8,7 @@ def monitor():
 	counter_x, counter_y = 0, 0
 	# 0 > x > -110 or 0 < x < 110
 	while 1:
+		time.sleep(0.02)
 		if (globalvar.eu[1] < -70 or globalvar.eu[1] > 70):
 			counter_y += 1
 			if (counter_y >= 4):
