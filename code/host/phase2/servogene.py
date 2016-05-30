@@ -8,14 +8,14 @@ import time
 
 PREFIX_LEN = 2
 
-def servo_gene():
+def servo_gene(strategy_q):
 
 	END_WALK_SLEEP_TIME = 0.5 # in seconds
 	END_RECOVER_SLEEP_TIME = 0.5 # in seconds
 
 	while True:
 
-		walk = globalvar.strategy_q.get(True)
+		walk = strategy_q.get(True)
 
 		walk.append(END_RECOVER_SLEEP_TIME)
 		no_of_servo, recover_index = walk[0], walk[1] 
