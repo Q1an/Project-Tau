@@ -8,33 +8,77 @@ import sys
 import monitor
 from multiprocessing import Process, Manager
 import os
-
+import numpy as numpy
+import matplotlib.pyplot as plt
 
 def P2(fo,strategy_q,buffer_q):
-	ns = [ 4, 10, 150, 90, 90, 90, 1]
+	ns = [ 4, 10, 110,145, 90, 90]
+	time.sleep(4)
+	step = -10	
+
+
 	while True:
 		strategy_q.put(ns)
-		print "strategy generated ",
-		print ns
+		print "strategy generated ", ns
 		while buffer_q.empty():
 			time.sleep(0.01)
-		b = buffer_q.get()
-		# 	# fo.write(str(b)+'\n')
-		# 	# fo.write("@@@@@@@@@@@@@@@@@@@@@@@@@")
-		fo.write(str(b[-1][0])+'\n')
-		# 	globalvar.temps+=str(b[-1][0])+'\n'
+		while not buffer_q.empty():
+			b = buffer_q.get()
+		if b!=[]:
 
-		time.sleep(3)
+			
+			# caoyue playing
+			max_index = numpy.argmax(b[2])
+			min_index = numpy.argmin(b[2])
+
+			if max_index > min_index:
+				print "postive, continue",step
+			else:
+				step = - step
+				print "negative, reverse", step
+
+			# print "**************"
+			# print b[-1]
+			# if b[-1]>0:
+			# 	print "postive, continue", step
+			# else:
+			# 	print "negative, previous", step, "reverse"
+			# 	step = -step
+			
+			ns[3] += step
+
+			fo.write(str(b[2])+'\n')
+
+		time.sleep(2)
 
 def P1(fo,strategy_q,buffer_q):
 	# t4 = threading.Thread(target=graph.run, name='graph')
 	# t4.daemon = True
 	# t4.start()
 	# time.sleep(5)
+
+	# plt initilization
+	plt.figure()
+	f, axarr = plt.subplots(3, sharex=True)
+	li = [axarr[i].plot([],[],'r',[],[],'b',[],[],'g') for i in xrange(3)]
+	li.append(axarr)
+	plt.setp(li[2][0],label="X-axis")
+	plt.setp(li[2][1],label="Y-axis")
+	plt.setp(li[2][2],label="Z-axis")
+	axarr[0].set_title("Acceleration")
+	axarr[1].set_title("Velocity")
+	axarr[2].set_title("Displacement")
+	box = axarr[2].get_position()
+	axarr[2].set_position([box.x0, box.y0 + box.height * 0.2, box.width, box.height * 0.8])
+	axarr[2].legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True,ncol=3)
+
+	# li = plt.plot([],[],'r',[],[],'b')
+	plt.ion()
+	plt.show(block=False)
 	t1 = threading.Thread(target=host.serv, name='server')
 	t1.daemon = True
 	t1.start()
-	t2 = threading.Thread(target=datahandler.handler, name='datahandler',args=(buffer_q,))
+	t2 = threading.Thread(target=datahandler.handler, name='datahandler',args=(buffer_q,plt,li,))
 	t2.daemon = True
 	t2.start()
 	print "datahandler start"

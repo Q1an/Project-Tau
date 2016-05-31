@@ -91,22 +91,23 @@ def run():
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
 
-        # glLineWidth(2)
 
-        # glBegin(GL_LINES)
-        # glColor((1., 0., 0.))
-        # glVertex3f(0, -1, 0)
-        # glVertex3f(0, 1, 0)
+        glLineWidth(2)
 
-        # glColor((0., 1., 0.))
-        # glVertex3f(-1, 0, 0)
-        # glVertex3f(1, 0, 0)
+        glBegin(GL_LINES)
+        glColor((1., 0., 0.))
+        glVertex3f(0, -1, 0)
+        glVertex3f(0, 1, 0)
 
-        # glColor((0., 0., 1.))
-        # glVertex3f(-0, 0, -1.5)
-        # glVertex3f(0, 0, 1)
+        glColor((0., 1., 0.))
+        glVertex3f(-1, 0, 0)
+        glVertex3f(1, 0, 0)
 
-        # glEnd()
+        glColor((0., 0., 1.))
+        glVertex3f(-0, 0, -1.5)
+        glVertex3f(0, 0, 1)
+
+        glEnd()
 
 
         glColor((1., 1., 1.))
@@ -150,10 +151,10 @@ def run():
         
         # glEnd()
         glPushMatrix()
-
+        coefficient = 10
         np = globalvar.p[:]
         if np!=trajectory[-1]:
-            np[0],np[1],np[2]=-np[0],np[2],np[1]
+            np[0],np[1],np[2]=-coefficient*np[0],coefficient*np[2],coefficient*np[1]
             trajectory.append(np[:])
         if abs(np[0])>srx or abs(np[1])>sry or abs(np[2])>srz:
             sornot=True

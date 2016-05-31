@@ -3,7 +3,8 @@ import globalvar
 import math
 import time
 
-def handler(buffer_q):
+
+def handler(buffer_q,plt,li):
 	buffer = []
 	while True:
 		if globalvar.data_received_q.empty():
@@ -23,15 +24,18 @@ def handler(buffer_q):
 					# velovity and position calculation
 					globalvar.acc = [d["linearacc_x"], d["linearacc_y"], -d["linearacc_z"]]
 					vpintegrate(globalvar.acc,tv)
-					tempb = [globalvar.p[1]]+ globalvar.eu + globalvar.acc + globalvar.v + globalvar.p
+					# print map(lambda x:round(x,4),globalvar.p)
 					if globalvar.cycle_start and not globalvar.cycle_end:
-						buffer.append(tempb)
+						bufferupdate(buffer)
 					elif globalvar.cycle_end and buffer !=[]:
 						buffer_q.put(buffer)
+						plotupdate(plt,li,buffer)
 						#send buffer`
 						buffer = []
 				else:
+					print "timeout detected"
 					globalvar.cycle_start = False
+					buffer_q.put([])
 					buffer = []
 
 def updateeuler(d):
@@ -45,4 +49,35 @@ def vpintegrate(acc,tv):
 			globalvar.p[i] += globalvar.v[i]*tv + 0.5*acc[i]*tv*tv
 			globalvar.v[i] += tv*acc[i]
 
+def bufferupdate(buffer):
+	if buffer:
+		buffer[0].append(globalvar.acc[0])
+		buffer[1].append(globalvar.acc[1])
+		buffer[2].append(globalvar.acc[2])
+		buffer[3].append(globalvar.v[0])
+		buffer[4].append(globalvar.v[1])
+		buffer[5].append(globalvar.v[2])
+		buffer[6].append(globalvar.p[0])
+		buffer[7].append(globalvar.p[1])
+		buffer[8].append(globalvar.p[2])
+	else:
+		buffer.append([globalvar.acc[0]])
+		buffer.append([globalvar.acc[1]])
+		buffer.append([globalvar.acc[2]])
+		buffer.append([globalvar.v[0]])
+		buffer.append([globalvar.v[1]])
+		buffer.append([globalvar.v[2]])
+		buffer.append([globalvar.p[0]])
+		buffer.append([globalvar.p[1]])
+		buffer.append([globalvar.p[2]])
 
+def plotupdate(plt,li,buffer):
+	for i in xrange(3):	
+		for k in xrange(3):
+			li[k][i].set_xdata(range(len(buffer[3*k+i])))
+			li[k][i].set_ydata(buffer[3*k+i])
+	for i in xrange(3):	
+		li[3][i].relim()
+		li[3][i].autoscale_view()
+
+	plt.draw()

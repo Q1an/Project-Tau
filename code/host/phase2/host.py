@@ -24,8 +24,10 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		#self.send_header("Connection","keep-alive")
 		self.end_headers() 
 		self.wfile.write("%s\r\n" % (str(globalvar.s[0]+100)+str(globalvar.s[1]+100)+str(globalvar.s[2]+100)+str(globalvar.s[2]+100)))
-		self.wfile.close()
+		#self.wfile.close()
 		#SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+	def log_message(self,format,*agrs):
+		return
 
 Handler = ServerHandler
 
