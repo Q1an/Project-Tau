@@ -11,45 +11,95 @@ import os
 import numpy as numpy
 import matplotlib.pyplot as plt
 
+comb = []
+for i in range(80,145,5):
+	for j in range(80,145,5):
+		comb.append([i,j])
+
+best = [0 for i in range(169)]
+
+
 def P2(fo,strategy_q,buffer_q):
-	ns = [ 4, 10, 110,145, 90, 90]
+	global best
+	ns = [ 4, 10, 135,140, 90, 90]
 	time.sleep(4)
-	step = -10	
+	step = -5
 
-
+	strategy_q.put(ns)
 	while True:
-		strategy_q.put(ns)
+		
 		print "strategy generated ", ns
 		while buffer_q.empty():
 			time.sleep(0.01)
 		while not buffer_q.empty():
 			b = buffer_q.get()
 		if b!=[]:
+			if abs(b[8][-1])>0.001:
+				max_index = numpy.argmax(b[2])
+				min_index = numpy.argmin(b[2])
 
-			
-			# caoyue playing
-			max_index = numpy.argmax(b[2])
-			min_index = numpy.argmin(b[2])
-
-			if max_index > min_index:
-				print "postive, continue",step
+				if max_index < min_index:
+					print "postive, continue",step
+				else:
+					step = - step
+					print "negative, reverse", step
+				ns[3] += step
+				ns[2] += step
 			else:
-				step = - step
-				print "negative, reverse", step
+				step =- step
+				ns[3] += step
+				ns[2] += step
 
-			# print "**************"
-			# print b[-1]
-			# if b[-1]>0:
-			# 	print "postive, continue", step
+			# if abs(b[8][-1])>0.002:
+			# 	if b[8][-1] < 0:
+			# 		step = -step
+
+			# # print "**************"
+			# # print b[-1]
+			# # if b[-1]>0:
+			# # 	print "postive, continue", step
+			# # else:
+			# # 	print "negative, previous", step, "reverse"
+			# # 	step = -step
+			# 	ns[3] += step
+			# 	ns[2] += step
 			# else:
-			# 	print "negative, previous", step, "reverse"
-			# 	step = -step
-			
-			ns[3] += step
+			# 	step =- step
+			# 	ns[3] += step
+			# 	ns[2] += step
 
+			if ns[2] >155 or ns[2] < 75:
+				ns[2],ns[3]=135,135 
 			fo.write(str(b[2])+'\n')
 
-		time.sleep(2)
+		time.sleep(0.4)
+		strategy_q.put(ns)
+
+
+# def P2(fo,strategy_q,buffer_q):
+# 	ns = [ 4, 7, 135,140, 90, 90,0.8,90,90,90,90]
+# 	while True:
+# 		strategy_q.put(ns)
+# 		time.sleep(2)
+
+# def P2(fo,strategy_q,buffer_q):
+# 	ns = [ 4, 7, 135,140, 90, 90,0.8,135,140,90,90]
+# 	time.sleep(2)
+# 	strategy_q.put(ns)
+
+# 	while True:
+# 		for k in range(len(comb)):
+# 			while buffer_q.empty():
+# 				time.sleep(0.01)
+# 			while not buffer_q.empty():
+# 				b = buffer_q.get()
+# 			if b!=[]:
+# 				ns[2]=comb[k][0]
+# 				ns[3]=comb[k][1]
+# 				strategy_q.put(ns)
+# 				best[(k+168)%169]=max(best[(k+168)%169],b[8][-1])
+# 			time.sleep(1)
+# 			print best
 
 def P1(fo,strategy_q,buffer_q):
 	# t4 = threading.Thread(target=graph.run, name='graph')
@@ -58,7 +108,7 @@ def P1(fo,strategy_q,buffer_q):
 	# time.sleep(5)
 
 	# plt initilization
-	plt.figure()
+	#plt.figure()
 	f, axarr = plt.subplots(3, sharex=True)
 	li = [axarr[i].plot([],[],'r',[],[],'b',[],[],'g') for i in xrange(3)]
 	li.append(axarr)
@@ -109,5 +159,5 @@ if __name__=='__main__':
 	p2.start()
 	p1.join()
 	p2.terminate()
-
+	fo.write(str(best))
 	fo.close()
