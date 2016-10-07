@@ -1,7 +1,14 @@
 #Project Tau
-![blueprint](https://github.com/Q1an/Project-Tau/raw/master/source/Phase1_White.001.w.caption.jpg)
+> Distributed Machine Learning For Reconfigurable  Modular Robots
 
+##Concept
+![Walking Robot](https://github.com/Q1an/Project-Tau/raw/master/source/walkingconfig.png)
+Walking robot configuration.
+
+![](https://github.com/Q1an/Project-Tau/raw/master/source/snakeconfig.png)
+Snake robot configuration.
 ##Project Overview
+![blueprint](https://github.com/Q1an/Project-Tau/raw/master/source/Phase1_White.001.w.caption.jpg)
 This project is intended to build a group of simple robots that learns how to move cooperatively based on the way they are assembled. While each robot has only one leg which moves forward and backward, the system can support much more complicated moving strategies, such as walking, running and rotating.  
 
 ##Hardware Design
@@ -28,9 +35,9 @@ For the first two phases of the project, all robots will be connected to a host 
 
 - use new stable servo
 - standardize model:
-	- easy to assemble
-	- legs are of the same legnth
-	- calibrate servo
+  - easy to assemble
+  - legs are of the same legnth
+  - calibrate servo
 - modify robot design to accommodate requirements of power supply; use flexible cable;
 - check MCU code to solve occasional delays
 - based on IMU to know directions
